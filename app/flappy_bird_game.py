@@ -1,6 +1,7 @@
 import os
 import time
 import random
+from typing import Iterable, Callable
 import pygame
 import neat
 
@@ -21,7 +22,7 @@ class Bird:
     ROTATION_VELOCITY = 20
     ANIMATION_TIME = 5
 
-    def __init__(self, x, y):
+    def __init__(self, x: float, y: float):
         self.x = x
         self.y = y
         self.tilt = 0
@@ -55,7 +56,7 @@ class Bird:
             if self.tilt > -90:
                 self.tilt -= self.ROTATION_VELOCITY
 
-    def draw(self, window):
+    def draw(self, window: pygame.display):
         self.image_count += 1
 
         if self.image_count < self.ANIMATION_TIME:
@@ -88,7 +89,7 @@ class Pipe:
     PIPE_TOP = pygame.transform.flip(PIPE_IMAGE, False, True)
     PIPE_BOTTOM = PIPE_IMAGE
 
-    def __init__(self, x):
+    def __init__(self, x: float):
         self.x = x
         self.height = 0
 
@@ -106,11 +107,11 @@ class Pipe:
     def move(self):
         self.x -= self.VELOCITY
 
-    def draw(self, window):
+    def draw(self, window: pygame.display):
         window.blit(self.PIPE_TOP, (self.x, self.top))
         window.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
 
-    def collide(self, bird):
+    def collide(self, bird: Bird):
         bird_mask = bird.get_mask()
         top_mask = pygame.mask.from_surface(self.PIPE_TOP)
         bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
@@ -131,10 +132,10 @@ class Ground:
     WIDTH = GROUND_IMAGE.get_width()
     IMAGE = GROUND_IMAGE
 
-    def __init__(self, y):
+    def __init__(self, y: float):
         self.y = y
         self.x1 = 0
-        self.x2 = self.width
+        self.x2 = self.WIDTH
 
     def move(self):
         self.x1 -= self.VELOCITY
@@ -150,25 +151,64 @@ class Ground:
         window.blit(self.IMAGE, (self.x2, self.y))
 
 
-def draw_window(window, bird):
+def draw_window(window: pygame.display, bird: Bird, pipes: Iterable[Pipe], ground: Ground):
     window.blit(BACKGROUND_IMAGE, (0, 0))
+
+    for pipe in pipes:
+        pipe.draw(window)
+
+    ground.draw(window)
     bird.draw(window)
+
     pygame.display.update()
 
 
 def main():
-    bird = Bird(200, 200)
+    bird = Bird(230, 350)
+    ground = Ground(730)
+    pipes = [Pipe(600)]
     window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     clock = pygame.time.Clock()
 
     run = True
+    score = 0
     while run:
         clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
         # bird.move()
-        draw_window(window, bird)
+        ground.move()
+        pipes_to_remove = []
+        add_pipe = False
+        for pipe in pipes:
+            # Check collision
+            if pipe.collide(bird):
+                pass
+            # Check if pipe should be removed
+            if (pipe.x + pipe.PIPE_TOP.get_width()) < 0:
+                pipes_to_remove.append(pipe)
+            # Check if ready for new pipe
+            if (not pipe.passed) and (pipe.x < bird.x):
+                pipe.passed = True
+                add_pipe = True
+
+            pipe.move()
+
+        # Add new pipe
+        if add_pipe:
+            score += 1
+            pipes.append(Pipe(600))
+
+        # Remove old pipes
+        for pipe in pipes_to_remove:
+            pipes.remove(pipe)
+
+        # Check if bird hits ground
+        if (bird.y + bird.image.get_height()) > 730:
+            pass
+        draw_window(window, bird, pipes, ground)
+
     pygame.quit()
     quit()
 
