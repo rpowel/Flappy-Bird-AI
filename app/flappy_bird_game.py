@@ -3,21 +3,24 @@ from typing import Iterable
 import pygame
 import neat
 from app.game_objects import Bird, Pipe, Ground
-
+pygame.font.init()
 
 WINDOW_HEIGHT = 800
 WINDOW_WIDTH = 500
 BACKGROUND_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join('images', 'bg.png')))
+STAT_FONT = pygame.font.SysFont('comicsans', 50)
 
 
-def draw_window(window: pygame.display, bird: Bird, pipes: Iterable[Pipe], ground: Ground):
+def draw_window(window: pygame.display, bird: Bird, pipes: Iterable[Pipe], ground: Ground, score: int):
     window.blit(BACKGROUND_IMAGE, (0, 0))
 
     for pipe in pipes:
         pipe.draw(window)
-
     ground.draw(window)
     bird.draw(window)
+
+    text = STAT_FONT.render(f'Score: {score}', 1, (255, 255, 255))
+    window.blit(text, (WINDOW_WIDTH - 10 - text.get_width(), 10))
 
     pygame.display.update()
 
@@ -66,7 +69,7 @@ def main():
         # Check if bird hits ground
         if (bird.y + bird.image.get_height()) > 730:
             pass
-        draw_window(window, bird, pipes, ground)
+        draw_window(window, bird, pipes, ground, score)
 
     pygame.quit()
     quit()
