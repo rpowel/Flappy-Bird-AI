@@ -82,6 +82,50 @@ class Bird:
         return pygame.mask.from_surface(self.image)
 
 
+class Pipe:
+    GAP = 200
+    VELOCITY = 5
+    PIPE_TOP = pygame.transform.flip(PIPE_IMAGE, False, True)
+    PIPE_BOTTOM = PIPE_IMAGE
+
+    def __init__(self, x):
+        self.x = x
+        self.height = 0
+
+        self.top = 0
+        self.bottom = 0
+
+        self.passed = False
+        self.set_height()
+
+    def set_height(self):
+        self.height = random.randrange(50, 450)
+        self.top = self.height - self.PIPE_TOP.get_height()
+        self.bottom = self.height + self.GAP
+
+    def move(self):
+        self.x -= self.VELOCITY
+
+    def draw(self, window):
+        window.blit(self.PIPE_TOP, (self.x, self.top))
+        window.blit(self.PIPE_BOTTOM, (self.x, self.bottom))
+
+    def collide(self, bird):
+        bird_mask = bird.get_mask()
+        top_mask = pygame.mask.from_surface(self.PIPE_TOP)
+        bottom_mask = pygame.mask.from_surface(self.PIPE_BOTTOM)
+
+        top_offset = (self.x - bird.x, self.top - round(bird.y))  # round for float point errs
+        bottom_offset = (self.x - bird.x, self.bottom - round(bird.y))
+
+        bottom_point = bird_mask.overlap(bottom_mask, bottom_offset)  # None if no collision
+        top_point = bird_mask.overlap(top_mask, top_offset)
+
+        if top_point or bottom_point:
+            return True
+        return False
+
+
 def draw_window(window, bird):
     window.blit(BACKGROUND_IMAGE, (0, 0))
     bird.draw(window)
