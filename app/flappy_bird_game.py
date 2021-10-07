@@ -19,7 +19,7 @@ def draw_window(window: pygame.display, bird: Bird, pipes: Iterable[Pipe], groun
     ground.draw(window)
     bird.draw(window)
 
-    text = STAT_FONT.render(f'Score: {score}', 1, (255, 255, 255))
+    text = STAT_FONT.render(f'Score: {score}', True, (255, 255, 255))
     window.blit(text, (WINDOW_WIDTH - 10 - text.get_width(), 10))
 
     pygame.display.update()
