@@ -2,11 +2,15 @@ import os
 import random
 import pygame
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+LOCAL_DIR = os.path.dirname(__file__)
+IMAGE_PATH = os.path.join(LOCAL_DIR, "images")
 
-BIRD_IMAGES = [pygame.transform.scale2x(pygame.image.load(os.path.join('images', f'bird{i}.png'))) for i in range(1, 4)]
-PIPE_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join('images', 'pipe.png')))
-GROUND_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join('images', 'base.png')))
+BIRD_IMAGES = [
+    pygame.transform.scale2x(pygame.image.load(os.path.join(IMAGE_PATH, f'bird{i}.png'))) for i in range(1, 4)
+]
+PIPE_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join(IMAGE_PATH, 'pipe.png')))
+GROUND_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join(IMAGE_PATH, 'base.png')))
+BACKGROUND_IMAGE = pygame.transform.scale2x(pygame.image.load(os.path.join(IMAGE_PATH, 'bg.png')))
 
 
 class Bird:

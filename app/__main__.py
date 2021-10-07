@@ -1,5 +1,5 @@
-from app.flappy_bird_game import main
+from app.flappy_bird_game import eval_fitness
 
 
 if __name__ == '__main__':
-    main()
+    eval_fitness()
