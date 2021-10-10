@@ -7,7 +7,7 @@ from app.game_objects import Bird, Pipe
 from app import game_logic
 
 
-def init_population(genomes, config):
+def init_population(genomes, config) -> (List[Bird], neat.DefaultGenome, neat.nn.FeedForwardNetwork):
     """Create birds, genomes, networks for NEAT training."""
     for _, g in genomes:
         g.fitness = 0
@@ -24,6 +24,10 @@ def change_fitness(ge: List, change_amount, indices=None):
         ge[i].fitness += change_amount
 
 
+def calc_birds_jump(birds, pipes, nets):
+    ...
+
+
 def eval_fitness(genomes, config):
     birds, ge, nets = init_population(genomes, config)
     window, ground, pipes = game_logic.create_window()
@@ -34,7 +38,7 @@ def eval_fitness(genomes, config):
         for i, bird in enumerate(birds):
             bird.move()
             change_fitness(ge, 0.1)
-        game_logic.calc_birds_jump(birds, pipes, nets)
+        calc_birds_jump(birds, pipes, nets)
         ground.move()
 
         remove_list = game_logic.check_pipe_collision(birds, pipes)

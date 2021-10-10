@@ -12,40 +12,12 @@ class Game:
     WINDOW_WIDTH = 500
     STAT_FONT = pygame.font.SysFont('comicsans', 50)
     GENERATION = 1
+    PIPES: Pipe
 
-    def __init__(self):
-        self.window = None
-        self.ground = None
-        self.pipes = None
-        self.birds = []
-        self.score = 0
-        self.clock = pygame.time.Clock()
-
-    def game_loop(self):
+    def __init__(self, birds: List[Bird]):
         self.window, self.ground, self.pipes = self.create_window()
-        self.birds = [Bird(230, 350)]
+        self.birds = birds
         self.score = 0
-        while True:
-            self.clock.tick(30)
-            self.handle_event()
-            # for bird in self.birds:
-                # bird.move()
-            self.ground.move()
-            remove_list = self.check_pipe_collision()
-            self.drop_from_list(remove_list, self.birds)
-            if self.check_end_game():
-                break
-            if self.check_passed_pipe():
-                self.score += 1
-                self.create_new_pipe()
-            for pipe in self.pipes:
-                pipe.move()
-            self.remove_old_pipe()
-            remove_list = self.check_ground_collision()
-            self.drop_from_list(remove_list, self.birds)
-            if self.check_end_game():
-                break
-            self.draw_window()
 
     def check_end_game(self) -> bool:
         """Check if game should be ended."""
@@ -53,19 +25,20 @@ class Game:
             return True
         return False
 
-    def create_window(self):
+    def create_window(self) -> (pygame.Surface, Ground, Pipe):
         window = pygame.display.set_mode((self.WINDOW_WIDTH, self.WINDOW_HEIGHT))
         ground = Ground(730)
         pipes = [Pipe(600)]
         return window, ground, pipes
 
-    def handle_event(self):
+    def handle_event(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type == pygame.K_SPACE:
-                self.birds[0].jump()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.birds[0].jump()
 
     def get_next_pipe_index(self) -> int:
         pipe_index = 0
@@ -74,14 +47,14 @@ class Game:
                 pipe_index = 1  # second pipe if more than 1 pipe and past first pipe
         return pipe_index
 
-    def check_ground_collision(self):
+    def check_ground_collision(self) -> List[int]:
         i_list = []
         for i, bird in enumerate(self.birds):
             if (bird.y + bird.image.get_height()) > 730 or bird.y < 0:
                 i_list.append(i)
         return i_list
 
-    def check_pipe_collision(self):
+    def check_pipe_collision(self) -> List[int]:
         i_list = []
         for pipe in self.pipes:
             for i, bird in enumerate(self.birds):
@@ -89,7 +62,7 @@ class Game:
                     i_list.append(i)
         return i_list
 
-    def check_passed_pipe(self):
+    def check_passed_pipe(self) -> bool:
         for pipe in self.pipes:
             if (not pipe.passed) and (pipe.x < self.birds[0].x):
                 pipe.passed = True
@@ -126,9 +99,8 @@ class Game:
 
 
 def main():
-    game = Game()
-    game.game_loop()
-
+    # game = Game()
+    pass
 
 if __name__ == '__main__':
     main()
