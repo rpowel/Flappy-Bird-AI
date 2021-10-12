@@ -1,14 +1,13 @@
 """Trainer for NEAT-AI to play Flappy Bird."""
-import os
-import pygame
 from typing import List, Callable, Any
+
 import neat
-from flappybird.game_objects import Bird, Pipe
-from flappybird import game_logic
+
 from flappybird import game_loop
+from flappybird.game_objects import Bird, Pipe
 
 
-def init_population(genomes, config) -> (List[Bird], neat.DefaultGenome, neat.nn.FeedForwardNetwork):
+def init_population(genomes, config) -> (List[Bird], List[neat.DefaultGenome], List[neat.nn.FeedForwardNetwork]):
     """Create birds, genomes, networks for NEAT training."""
     for _, g in genomes:
         g.fitness = 0
@@ -25,7 +24,7 @@ def change_fitness(ge: List, change_amount: float, indices=None) -> None:
         ge[i].fitness += change_amount
 
 
-def calc_birds_jump(birds: List[Bird], next_pipe: Pipe, nets: neat.nn.FeedForwardNetwork) -> None:
+def calc_birds_jump(birds: List[Bird], next_pipe: Pipe, nets: List[neat.nn.FeedForwardNetwork]) -> None:
     for i, bird in enumerate(birds):
         output = nets[i].activate((
             bird.y,
@@ -49,6 +48,8 @@ def train(config_path: str, training_func: Callable[[neat.genome, neat.nn.FeedFo
     population.add_reporter(neat.StatisticsReporter())
 
     winner = population.run(training_func, 50)
+
+    print(winner)
 
 
 def main():

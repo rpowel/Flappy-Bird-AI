@@ -1,8 +1,10 @@
 """Primary game logic for Flappy Bird game."""
-import os
 from typing import List
+
 import pygame
+
 from flappybird.game_objects import Bird, Pipe, Ground, BACKGROUND_IMAGE
+
 pygame.font.init()
 
 

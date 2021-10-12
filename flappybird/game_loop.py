@@ -1,10 +1,10 @@
 import os
-import pygame
-from typing import List
 import neat
+import pygame
+
+import flappybird.trainer as trainer
 from flappybird.game_logic import Game
 from flappybird.game_objects import Bird
-import flappybird.trainer as trainer
 
 
 class GameLoop:
