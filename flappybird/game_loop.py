@@ -1,6 +1,9 @@
+"""Primary game loop for Flappy Bird."""
 import os
 import neat
 import pygame
+
+from typing import List
 
 import flappybird.trainer as trainer
 from flappybird.game_logic import Game
@@ -9,8 +12,8 @@ from flappybird.game_objects import Bird
 
 class GameLoop:
     game: Game
-    ge: neat.genome
-    nets: neat.nn.FeedForwardNetwork
+    ge: List[neat.DefaultGenome]
+    nets: List[neat.nn.FeedForwardNetwork]
     CLOCK = pygame.time.Clock()
 
     def __init__(self, trained_bird: Bird = None, train_model: bool = False):

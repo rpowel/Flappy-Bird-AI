@@ -1,3 +1,4 @@
+"""Primary game objects for Flappy Bird."""
 import os
 import random
 import pygame

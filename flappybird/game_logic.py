@@ -1,7 +1,7 @@
 """Primary game logic for Flappy Bird game."""
-from typing import List
-
 import pygame
+
+from typing import List
 
 from flappybird.game_objects import Bird, Pipe, Ground, BACKGROUND_IMAGE
 
@@ -71,7 +71,7 @@ class Game:
         return False
 
     @staticmethod
-    def drop_from_list(indices_to_drop: List[int], *args):
+    def drop_from_list(indices_to_drop: List[int], *args) -> None:
         for i in sorted(indices_to_drop, reverse=True):
             for lst in args:
                 lst.pop(i)
@@ -81,10 +81,10 @@ class Game:
             if (pipe.x + pipe.PIPE_TOP.get_width()) < 0:
                 self.pipes.pop(0)
 
-    def create_new_pipe(self):
+    def create_new_pipe(self) -> None:
         self.pipes.append(Pipe(600))
 
-    def draw_window(self):
+    def draw_window(self) -> None:
         self.window.blit(BACKGROUND_IMAGE, (0, 0))
 
         for pipe in self.pipes:
