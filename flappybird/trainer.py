@@ -25,12 +25,12 @@ def change_fitness(ge: List, change_amount: float, indices=None) -> None:
         ge[i].fitness += change_amount
 
 
-def calc_birds_jump(birds: List[Bird], pipes: List[Pipe], nets: neat.nn.FeedForwardNetwork) -> None:
+def calc_birds_jump(birds: List[Bird], next_pipe: Pipe, nets: neat.nn.FeedForwardNetwork) -> None:
     for i, bird in enumerate(birds):
         output = nets[i].activate((
             bird.y,
-            abs(bird.y - pipes[-1].height),
-            abs(bird.y - pipes[-1].bottom),
+            abs(bird.y - next_pipe.height),
+            abs(bird.y - next_pipe.bottom),
         ))
         if output[0] > 0.5:  # output is a tuple, need first item
             bird.jump()

@@ -22,15 +22,16 @@ class GameLoop:
 
     def play(self):
         while True:
-            # if not self.train_model:
-            self.CLOCK.tick(30)
+            if not self.train_model:
+                self.CLOCK.tick(30)
             self.game.handle_event(self.train_model)
             for i, bird in enumerate(self.game.birds):
                 bird.move()
                 if self.train_model:
                     trainer.change_fitness(self.ge, 0.1)
             if self.train_model:
-                trainer.calc_birds_jump(self.game.birds, self.game.pipes, self.nets)
+                next_pipe = self.game.pipes[self.game.get_next_pipe_index()]
+                trainer.calc_birds_jump(self.game.birds, next_pipe, self.nets)
             self.game.ground.move()
             remove_list = self.game.check_pipe_collision()
             self.game.drop_from_list(remove_list, self.game.birds)
@@ -52,10 +53,9 @@ class GameLoop:
             self.game.drop_from_list(
                 birds_to_remove,
                 self.game.birds,
-                self.game.pipes,
             )
-            # if self.train_model:
-            #     self.game.drop_from_list(birds_to_remove, self.ge, self.nets)
+            if self.train_model:
+                self.game.drop_from_list(birds_to_remove, self.ge, self.nets)
             if self.game.check_end_game():
                 break
             self.game.draw_window()
