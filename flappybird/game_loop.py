@@ -2,9 +2,9 @@ import os
 import pygame
 from typing import List
 import neat
-from game_logic import Game
-from game_objects import Bird
-import trainer
+from flappybird.game_logic import Game
+from flappybird.game_objects import Bird
+import flappybird.trainer as trainer
 
 
 class GameLoop:
@@ -20,10 +20,11 @@ class GameLoop:
                 birds = [Bird(230, 350)]
                 self.game = Game(birds)
 
-    def game_loop(self):
+    def play(self):
         while True:
+            # if not self.train_model:
             self.CLOCK.tick(30)
-            self.game.handle_event()
+            self.game.handle_event(self.train_model)
             for i, bird in enumerate(self.game.birds):
                 bird.move()
                 if self.train_model:
@@ -53,16 +54,23 @@ class GameLoop:
                 self.game.birds,
                 self.game.pipes,
             )
+            # if self.train_model:
+            #     self.game.drop_from_list(birds_to_remove, self.ge, self.nets)
             if self.game.check_end_game():
                 break
             self.game.draw_window()
 
-    def play(self):
-        self.game_loop()
-
     def train(self, genomes, config):
         birds, self.ge, self.nets = trainer.init_population(genomes, config)
         self.game = Game(birds)
+        self.play()
+
+
+def train():
+    local_dir = os.path.dirname(__file__)
+    config_path = os.path.join(local_dir, "config-feedforward.txt")
+    game = GameLoop(train_model=True)
+    trainer.train(config_path, game.train)
 
 
 def main():

@@ -1,4 +1,4 @@
-from app.game_logic import main
+from flappybird.game_loop import main
 
 
 if __name__ == '__main__':

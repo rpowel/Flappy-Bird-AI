@@ -2,8 +2,7 @@
 import os
 from typing import List
 import pygame
-import neat
-from app.game_objects import Bird, Pipe, Ground, BACKGROUND_IMAGE
+from flappybird.game_objects import Bird, Pipe, Ground, BACKGROUND_IMAGE
 pygame.font.init()
 
 
@@ -31,19 +30,19 @@ class Game:
         pipes = [Pipe(600)]
         return window, ground, pipes
 
-    def handle_event(self) -> None:
+    def handle_event(self, train_model: bool) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif event.type == pygame.KEYDOWN:
+            elif (event.type == pygame.KEYDOWN) and (not train_model):
                 if event.key == pygame.K_SPACE:
                     self.birds[0].jump()
 
     def get_next_pipe_index(self) -> int:
         pipe_index = 0
         if len(self.birds) > 0:
-            if (len(self.pipes) > 1) and (self.birds[0].x > (self.pipes[0].x + pipes[0].PIPE_TOP.get_width())):
+            if (len(self.pipes) > 1) and (self.birds[0].x > (self.pipes[0].x + self.pipes[0].PIPE_TOP.get_width())):
                 pipe_index = 1  # second pipe if more than 1 pipe and past first pipe
         return pipe_index
 
@@ -96,11 +95,3 @@ class Game:
         self.window.blit(text, (self.WINDOW_WIDTH - 10 - text.get_width(), 10))
 
         pygame.display.update()
-
-
-def main():
-    # game = Game()
-    pass
-
-if __name__ == '__main__':
-    main()
