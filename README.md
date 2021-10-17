@@ -31,6 +31,6 @@ main()
 # To train NEAT-AI
 main(train_bird_bool=True)
 # To specify location to save NEAT-AI training result (as pickle binary)
-PATH = 'your_path'
+PATH = 'your_path/your_trained_bird.obj'
 main(train_bird_bool=True, train_outfile=PATH)
 ```
