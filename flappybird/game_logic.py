@@ -22,7 +22,7 @@ class Game:
 
     def check_end_game(self) -> bool:
         """Check if game should be ended."""
-        if (self.score > 20) or (len(self.birds) == 0):
+        if (self.score > 10) or (len(self.birds) == 0):
             return True
         return False
 

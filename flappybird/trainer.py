@@ -1,10 +1,15 @@
 """Trainer for NEAT-AI to play Flappy Bird."""
-from typing import List, Callable, Any
-
+import os
 import neat
+import pickle
 
+from typing import List, Callable, Any
 from flappybird import game_loop
 from flappybird.game_objects import Bird, Pipe
+
+
+LOCAL_DIR = os.path.dirname(__file__)
+SAVE_PATH = os.path.join(LOCAL_DIR, "train_output")
 
 
 def init_population(genomes, config) -> (List[Bird], List[neat.DefaultGenome], List[neat.nn.FeedForwardNetwork]):
@@ -35,7 +40,11 @@ def calc_birds_jump(birds: List[Bird], next_pipe: Pipe, nets: List[neat.nn.FeedF
             bird.jump()
 
 
-def train(config_path: str, training_func: Callable[[neat.genome, neat.nn.FeedForwardNetwork], Any]):
+def train(
+        config_path: str,
+        training_func: Callable[[neat.genome, neat.nn.FeedForwardNetwork], Any],
+        trainer_outfile: str = 'trained_bird.obj',
+):
     config = neat.config.Config(
         neat.DefaultGenome,
         neat.DefaultReproduction,
@@ -48,8 +57,15 @@ def train(config_path: str, training_func: Callable[[neat.genome, neat.nn.FeedFo
     population.add_reporter(neat.StatisticsReporter())
 
     winner = population.run(training_func, 50)
+    save_winner(winner, trainer_outfile)
 
-    print(winner)
+
+def save_winner(winner: neat.DefaultGenome, outfile: str):
+    if not os.path.exists(SAVE_PATH):
+        os.makedirs(SAVE_PATH)
+    outpath = os.path.join(SAVE_PATH, outfile)
+    with open(outpath, 'wb') as file:
+        pickle.dump(winner, file)
 
 
 def main():

@@ -69,16 +69,24 @@ class GameLoop:
         self.play()
 
 
-def train():
+def train(trainer_outfile: str = 'trained_bird.obj'):
     local_dir = os.path.dirname(__file__)
     config_path = os.path.join(local_dir, "config-feedforward.txt")
     game = GameLoop(train_model=True)
-    trainer.train(config_path, game.train)
+    trainer.train(config_path, game.train, trainer_outfile=trainer_outfile)
 
 
-def main():
-    game = GameLoop()
-    game.play()
+def main(
+        train_bird_bool: bool = False,
+        train_outfile: str = None,
+        use_trained_bool: bool = False,
+        path_to_trained: str = None,
+):
+    if train_bird_bool:
+        train(train_outfile)
+    else:
+        game = GameLoop()
+        game.play()
 
 
 if __name__ == '__main__':
