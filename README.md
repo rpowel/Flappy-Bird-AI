@@ -2,9 +2,9 @@
 
 # Installation
 ```shell
-$ git clone https://github.com/rpowel/Flappy-Bird-AI
-$ cd Flappy-Bird-AI
-$ pip install -r requirements.txt
+git clone https://github.com/rpowel/Flappy-Bird-AI
+cd Flappy-Bird-AI
+pip install -r requirements.txt
 ```
 
 # Usage
@@ -12,14 +12,14 @@ $ pip install -r requirements.txt
 ## From CLI
 ```shell
 # To play normally
-$ python -m flappybird
+python -m flappybird
 
 # To train NEAT-AI
-$ python -m flappybird -t
+python -m flappybird -t
 # OR
-$ python -m flappybird --train
+python -m flappybird --train
 # To specify location to save NEAT-AI training result (as pickle binary)
-$ python -m flappybird --train <your_desired_path>
+python -m flappybird --train <your_desired_path>
 ```
 ## In python
 ```python
